@@ -1,6 +1,8 @@
 {
     "name": "givebutter/laravel-keyable",
     "description": "Add API keys to your Laravel models",
+    "license": "MIT",
+    "keywords": ["laravel", "php", "api"],
     "authors": [
         {
             "name": "Liran Cohen",
@@ -8,7 +10,10 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "prefer-stable": true,
+    "require": {
+	    "php": "^7.0"
+    },
     "autoload": {
         "psr-4": {
             "Givebutter\\LaravelKeyable\\": "src/"
