@@ -2,6 +2,8 @@
 
 Laravel Keyable is a package that allows you to add API Keys to any model. This allows you to associate incoming requests with their respective models. You can also use Policies to authorize requests.
 
+[![Latest Stable Version](https://poser.pugx.org/givebutter/laravel-keyable/v/stable)](https://packagist.org/packages/givebutter/laravel-keyable) [![Total Downloads](https://poser.pugx.org/givebutter/laravel-keyable/downloads)](https://packagist.org/packages/givebutter/laravel-keyable) [![License](https://poser.pugx.org/givebutter/laravel-keyable/license)](https://packagist.org/packages/givebutter/laravel-keyable)
+
 ## Installation
 
 Require the ```givebutter/laravel-keyable``` package in your ```composer.json``` and update your dependencies:
