@@ -11,9 +11,6 @@ trait AuthorizesKeyableRequests
 {
 
     public function authorizeKeyable($ability, $object) {
-	    
-	    //For Laravel user authentication
-	    if (!request()->apiKey) return $this->authorize($ability, $object);
 		
 		//For Keyable authentication
 		$keyable = request()->keyable;
