@@ -46,9 +46,9 @@ Add the ```auth.apiKey``` middleware to the ```mapApiRoutes()``` function in you
 protected function mapApiRoutes()
 {
     Route::prefix('api')
-        	->middleware(['api', 'auth.apikey'])
-			->namespace($this->namespace . '\API')
-			->group(base_path('routes/api.php'));
+        ->middleware(['api', 'auth.apikey'])
+	->namespace($this->namespace . '\API')
+	->group(base_path('routes/api.php'));
 }
 
 // ...
@@ -80,7 +80,7 @@ return $model->foo()->get();
 
 ### Keys Without Models
 
-Sometimes you may not want to attach a model to an API key (if you wanted to have administrative access to your API). By default this functionality is turned off, 
+Sometimes you may not want to attach a model to an API key (if you wanted to have administrative access to your API). By default this functionality is turned off:
 
 ```php
 <?php
