@@ -87,7 +87,7 @@ Sometimes you may not want to attach a model to an API key (if you wanted to hav
 	
 return [
 	
-	'allow_empty_models' => true
+    'allow_empty_models' => true
 	
 ];
 ```
@@ -106,9 +106,9 @@ You can change where the API key is retrieved from by altering the setting in th
 	
 return [
 	
-	'mode' => 'header',
+    'mode' => 'header',
 	
-	'key' => 'X-Authorization',
+    'key' => 'X-Authorization',
 	
 ];
 ```
@@ -119,9 +119,9 @@ Need to pass the key as a URL parameter? Set the mode to `parameter` and the key
 	
 return [
 	
-	'mode' => 'parameter',
+    'mode' => 'parameter',
 	
-	'key' => 'api_key'
+    'key' => 'api_key'
 	
 ];
 ```
