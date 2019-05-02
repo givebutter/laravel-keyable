@@ -50,7 +50,7 @@ class GenerateApiKey extends Command
 
         $apiKey->save();
 
-        $this->info('An API key was created with the following key: ' . $apiKey->key);
+        $this->info('The following API key was created: ' . $apiKey->key);
 
         return;
     }

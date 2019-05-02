@@ -1,8 +1,8 @@
 <?php
 	
-namespace Givebutter\LaravelKeyable;
+namespace Givebutter\LaravelKeyable\Auth;
   
-class KeyableClass
+class Keyable
 {
 	
 	protected $policies;

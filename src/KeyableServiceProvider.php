@@ -4,11 +4,9 @@ namespace Givebutter\LaravelKeyable;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
-
-use Givebutter\LaravelKeyable\Http\Middleware\AuthenticateApiKey;
-
-use Givebutter\LaravelKeyable\KeyableClass;
+use Givebutter\LaravelKeyable\Console\Commands\DeleteApiKey;
 use Givebutter\LaravelKeyable\Console\Commands\GenerateApiKey;
+use Givebutter\LaravelKeyable\Http\Middleware\AuthenticateApiKey;
 
 class KeyableServiceProvider extends ServiceProvider
 {
@@ -19,14 +17,12 @@ class KeyableServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
+	    $this->publishFiles();
         $this->registerMiddleware($router);
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->app->bind('KeyableClass', function () {
-            return new KeyableClass;
-        });
         if ($this->app->runningInConsole()) {
 	        $this->commands([
 	            GenerateApiKey::class,
+	            DeleteApiKey::class
 	        ]);
 	    }
     }
@@ -40,6 +36,19 @@ class KeyableServiceProvider extends ServiceProvider
     {
         //
     }
+    
+    /**
+     * Publish files.
+     *
+     * @return void
+     */
+    private function publishFiles()
+    {
+	    $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+		$this->publishes([
+	    	__DIR__.'/../config/keyable.php' => config_path('keyable.php'),
+	    ]);
+	}
     
     /**
      * Register middleware

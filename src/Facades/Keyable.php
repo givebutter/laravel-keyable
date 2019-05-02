@@ -3,15 +3,17 @@
 namespace Givebutter\LaravelKeyable\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use Illuminate\Auth\Access\Response;
-use Illuminate\Auth\Access\AuthorizationException;
-
-use App\Models\Campaign\Campaign;
-use App\Policies\KeyablePolicies\CampaignPolicy;
+use Givebutter\LaravelKeyable\Auth\Keyable as KeyableAuth;
 
 class Keyable extends Facade
 {
-	
-	protected static function getFacadeAccessor() { return 'KeyableClass'; }
-	
+    /**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return KeyableAuth::class;
+    }
 }

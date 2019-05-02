@@ -57,4 +57,12 @@ class ApiKey extends Model
     {
         return self::where('key', $key)->withTrashed()->first() instanceof self;
     }
+    
+    /**
+     * Mark key as used
+     */
+    public function markAsUsed() 
+    {
+	    $this->forceFill(['last_used_at' => $this->freshTimestamp()])->save();	    
+    }    
 }
