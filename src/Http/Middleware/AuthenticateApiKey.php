@@ -36,7 +36,7 @@ class AuthenticateApiKey
         //Validate model
         if (config('keyable.allow_empty_models', false)) {
 	        
-	        if (!is_null($apiKey->keyable_type) || !is_null($apiKey->keyable_id))
+	        if (!$keyable && (!is_null($apiKey->keyable_type) || !is_null($apiKey->keyable_id)))
 	        	return $this->unauthorizedResponse();
 	        
         } else {

@@ -15,17 +15,21 @@ trait AuthorizesKeyableRequests
      */
     public function authorizeKeyable($ability, $object) 
     {
-	    //Helpers
 		$apiKey = request()->apiKey;
 		$keyable = request()->keyable;
-	    $policy = $this->getKeyablePolicy($object);
 	    
-	    //Run before function
-	    $before = (new $policy)->before($apiKey, $keyable, $object);
-	    if (!is_null($before) && $before) return new Response('');
-	    
-	    //Check Policy
-	    if ($policy && (new $policy)->$ability($apiKey, $keyable, $object)) return new Response('');
+	    if ($policy = $this->getKeyablePolicy($object)) {
+		    
+		    $policyClass = (new $policy);
+		    
+		    if (method_exists($policyClass, 'before')) {
+			    $before = $policyClass->before($apiKey, $keyable, $object);
+				if (!is_null($before) && $before) return new Response('');
+		    }
+		    
+			if ($policyClass->$ability($apiKey, $keyable, $object)) return new Response('');
+		    
+	    }
 	    	    
 		//Throw exception
 		throw new AuthorizationException('This action is unauthorized.');
