@@ -14,7 +14,9 @@ trait Keyable
     
     public function createApiKey()
     {
-        return ApiKey::generate($this);
+        return $this->apiKeys()->save(new ApiKey([
+            'key' => ApiKey::generate()
+        ]));
     }
     
 }

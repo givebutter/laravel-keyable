@@ -11,6 +11,9 @@ class ApiKey extends Model
 
     protected $table = 'api_keys';
     protected $fillable = ['key', 'keyable_id', 'keyable_type', 'last_used_at'];
+    protected $casts = [
+	    'last_used_at' => 'datetime'
+    ];
 
 	/**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
