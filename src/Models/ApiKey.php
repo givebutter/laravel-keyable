@@ -4,6 +4,7 @@ namespace Givebutter\LaravelKeyable\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class ApiKey extends Model
 {
@@ -31,7 +32,7 @@ class ApiKey extends Model
     public static function generate()
     {
         do {
-            $key = str_random(40);
+            $key = Str::random(40);
         } while (self::keyExists($key));
 
         return $key;
