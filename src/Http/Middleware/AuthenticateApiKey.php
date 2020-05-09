@@ -79,7 +79,7 @@ class AuthenticateApiKey
             return $request->header(config('keyable.key', 'X-Authorization'));
         }
 
-        // Paramter check
+        // Parameter check
         if (
             in_array('parameter', $modes) &&
             !is_null($request->input(config('keyable.key', 'api_key')))

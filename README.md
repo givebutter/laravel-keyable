@@ -101,12 +101,15 @@ Authorization: Bearer <key>
 ```
 
 You can change where the API key is retrieved from by altering the setting in the `keyable.php` config file. Supported options are: `bearer`, `header`, and `parameter`. 
+
+As it is an array, you can use more than one of these options and combine them.
+
 ```php
 <?php
 	
 return [
 	
-    'mode' => 'header',
+    'modes' => ['header'],
 	
     'key' => 'X-Authorization',
 	
@@ -119,7 +122,7 @@ Need to pass the key as a URL parameter? Set the mode to `parameter` and the key
 	
 return [
 	
-    'mode' => 'parameter',
+    'modes' => ['parameter'],
 	
     'key' => 'api_key'
 	
