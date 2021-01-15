@@ -1,8 +1,8 @@
 <?php
-	
+    
 return [
-	
-	/*
+    
+    /*
     |--------------------------------------------------------------------------
     | Authentication Mode
     |--------------------------------------------------------------------------
@@ -10,14 +10,14 @@ return [
     | Supported modes: header, bearer, parameter
     |
     | When using header or parameter, set a key value.
-	|
+    |
     */
     
-	'mode' => 'bearer',
-	
-	'key' => null,
-	
-	/*
+    'mode' => 'bearer',
+    
+    'key' => null,
+    
+    /*
     |--------------------------------------------------------------------------
     | Empty Models
     |--------------------------------------------------------------------------
@@ -26,6 +26,6 @@ return [
     |
     */
     
-	'allow_empty_models' => false,
-	
+    'allow_empty_models' => false,
+    
 ];

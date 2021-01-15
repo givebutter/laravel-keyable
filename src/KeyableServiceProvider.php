@@ -17,14 +17,14 @@ class KeyableServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-	    $this->publishFiles();
+        $this->publishFiles();
         $this->registerMiddleware($router);
         if ($this->app->runningInConsole()) {
-	        $this->commands([
-	            GenerateApiKey::class,
-	            DeleteApiKey::class
-	        ]);
-	    }
+            $this->commands([
+                GenerateApiKey::class,
+                DeleteApiKey::class
+            ]);
+        }
     }
 
     /**
@@ -44,11 +44,11 @@ class KeyableServiceProvider extends ServiceProvider
      */
     private function publishFiles()
     {
-	    $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-		$this->publishes([
-	    	__DIR__.'/../config/keyable.php' => config_path('keyable.php'),
-	    ]);
-	}
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->publishes([
+            __DIR__.'/../config/keyable.php' => config_path('keyable.php'),
+        ]);
+    }
     
     /**
      * Register middleware

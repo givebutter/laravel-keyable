@@ -1,5 +1,5 @@
 <?php
-	
+    
 namespace Givebutter\LaravelKeyable\Facades;
 
 use Illuminate\Support\Facades\Facade;
