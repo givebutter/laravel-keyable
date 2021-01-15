@@ -10,22 +10,22 @@ class ApiKey extends Model
 {
     use SoftDeletes;
 
-    protected $table = 'api_keys';
-    
-    protected $fillable = ['key', 'keyable_id', 'keyable_type', 'last_used_at'];
-    
-    protected $casts = [
-	    'last_used_at' => 'datetime'
-    ];
+    protected $table = "api_keys";
 
-	/**
+    protected $fillable = ["key", "keyable_id", "keyable_type", "last_used_at"];
+
+    protected $casts = [
+    "last_used_at" => "datetime",
+  ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-	public function keyable()
+    public function keyable()
     {
         return $this->morphTo();
     }
-    
+
     /**
      * Generate a secure unique API key
      *
@@ -48,7 +48,7 @@ class ApiKey extends Model
      */
     public static function getByKey($key)
     {
-        return self::where('key', $key)->first();
+        return self::where("key", $key)->first();
     }
 
     /**
@@ -61,14 +61,16 @@ class ApiKey extends Model
      */
     public static function keyExists($key)
     {
-        return self::where('key', $key)->withTrashed()->first() instanceof self;
+        return self::where("key", $key)
+      ->withTrashed()
+      ->first() instanceof self;
     }
-    
+
     /**
      * Mark key as used
      */
-    public function markAsUsed() 
+    public function markAsUsed()
     {
-	    $this->forceFill(['last_used_at' => $this->freshTimestamp()])->save();	    
-    }    
+        $this->forceFill(["last_used_at" => $this->freshTimestamp()])->save();
+    }
 }
