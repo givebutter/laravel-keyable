@@ -13,6 +13,7 @@ class KeyableServiceProvider extends ServiceProvider
     /**
      * Bootstrap services.
      *
+     * @param Router $router
      * @return void
      */
     public function boot(Router $router)
@@ -36,7 +37,7 @@ class KeyableServiceProvider extends ServiceProvider
     {
         //
     }
-    
+
     /**
      * Publish files.
      *
@@ -49,7 +50,7 @@ class KeyableServiceProvider extends ServiceProvider
             __DIR__.'/../config/keyable.php' => config_path('keyable.php'),
         ]);
     }
-    
+
     /**
      * Register middleware
      *

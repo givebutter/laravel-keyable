@@ -17,18 +17,17 @@ class AuthenticateApiKey
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        
         //Get API token from request
         $token = $this->getKeyFromRequest($request);
-        
+
         //Check for presence of key
         if (!$token) {
             return $this->unauthorizedResponse();
         }
-        
+
         //Get API key
         $apiKey = ApiKey::getByKey($token);
-        
+
         //Validate key
         if (!($apiKey instanceof ApiKey)) {
             return $this->unauthorizedResponse();
@@ -36,7 +35,7 @@ class AuthenticateApiKey
 
         //Get the model
         $keyable = $apiKey->keyable;
-        
+
         //Validate model
         if (config('keyable.allow_empty_models', false)) {
             if (!$keyable && (!is_null($apiKey->keyable_type) || !is_null($apiKey->keyable_id))) {
@@ -47,20 +46,20 @@ class AuthenticateApiKey
                 return $this->unauthorizedResponse();
             }
         }
-        
+
         //Attach the apikey object to the request
         $request->apiKey = $apiKey;
         if ($keyable) {
             $request->keyable = $keyable;
         }
-        
+
         //Update last_used_at
         $apiKey->markAsUsed();
-        
+
         //Return
         return $next($request);
     }
-    
+
     protected function getKeyFromRequest($request)
     {
         $mode = config('keyable.mode', 'bearer');
@@ -76,7 +75,7 @@ class AuthenticateApiKey
                 break;
         }
     }
-    
+
     protected function unauthorizedResponse()
     {
         return response([
