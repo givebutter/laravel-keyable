@@ -92,6 +92,20 @@ return [
 ];
 ```
 
+### UUID support
+Before migrate you can config if you prefer use bigint or uuid identifiers.
+By default use `bigint` like ***keyable_id***
+
+```php
+<?php
+
+return [
+
+    'identifier' => 'bigint'
+    
+];
+```
+
 ## Making Requests
 
 By default, laravel-keyable uses bearer tokens to authenticate requests. Attach the API key to the header of each request:
