@@ -2,8 +2,8 @@
 
 namespace Givebutter\LaravelKeyable\Console\Commands;
 
-use Illuminate\Console\Command;
 use Givebutter\LaravelKeyable\Models\ApiKey;
+use Illuminate\Console\Command;
 
 class DeleteApiKey extends Command
 {
@@ -24,7 +24,6 @@ class DeleteApiKey extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -41,6 +40,5 @@ class DeleteApiKey extends Command
         $key = ApiKey::findOrFail($this->option('id'));
         $key->delete();
         $this->info('API key successfully deleted.');
-        return;
     }
 }

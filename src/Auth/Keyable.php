@@ -1,20 +1,18 @@
 <?php
-	
+
 namespace Givebutter\LaravelKeyable\Auth;
-  
+
 class Keyable
 {
-	
-	protected $policies;
-	
+    protected $policies;
+
     public function registerKeyablePolicies($policies)
     {
         return $this->policies = $policies;
     }
-    
-    public function getKeyablePolicies() 
+
+    public function getKeyablePolicies()
     {
-	    return $this->policies;
+        return $this->policies;
     }
-    
 }
