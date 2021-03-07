@@ -2,8 +2,8 @@
 
 namespace Givebutter\LaravelKeyable\Console\Commands;
 
-use Illuminate\Console\Command;
 use Givebutter\LaravelKeyable\Models\ApiKey;
+use Illuminate\Console\Command;
 
 class GenerateApiKey extends Command
 {
@@ -25,7 +25,6 @@ class GenerateApiKey extends Command
 
     /**
      * Create a new command instance.
-     *
      */
     public function __construct()
     {
@@ -50,8 +49,6 @@ class GenerateApiKey extends Command
 
         $apiKey->save();
 
-        $this->info('The following API key was created: ' . $apiKey->key);
-
-        return;
+        $this->info('The following API key was created: '.$apiKey->key);
     }
 }

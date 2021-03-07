@@ -1,9 +1,9 @@
 <?php
-    
+
 namespace Givebutter\LaravelKeyable\Facades;
 
-use Illuminate\Support\Facades\Facade;
 use Givebutter\LaravelKeyable\Auth\Keyable as KeyableAuth;
+use Illuminate\Support\Facades\Facade;
 
 class Keyable extends Facade
 {

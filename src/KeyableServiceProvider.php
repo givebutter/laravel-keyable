@@ -2,11 +2,11 @@
 
 namespace Givebutter\LaravelKeyable;
 
-use Illuminate\Routing\Router;
-use Illuminate\Support\ServiceProvider;
 use Givebutter\LaravelKeyable\Console\Commands\DeleteApiKey;
 use Givebutter\LaravelKeyable\Console\Commands\GenerateApiKey;
 use Givebutter\LaravelKeyable\Http\Middleware\AuthenticateApiKey;
+use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
 
 class KeyableServiceProvider extends ServiceProvider
 {
@@ -22,7 +22,7 @@ class KeyableServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 GenerateApiKey::class,
-                DeleteApiKey::class
+                DeleteApiKey::class,
             ]);
         }
     }
@@ -36,7 +36,7 @@ class KeyableServiceProvider extends ServiceProvider
     {
         //
     }
-    
+
     /**
      * Publish files.
      *
@@ -49,9 +49,9 @@ class KeyableServiceProvider extends ServiceProvider
             __DIR__.'/../config/keyable.php' => config_path('keyable.php'),
         ]);
     }
-    
+
     /**
-     * Register middleware
+     * Register middleware.
      *
      * Support added for different Laravel versions
      *
