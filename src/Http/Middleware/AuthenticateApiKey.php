@@ -65,6 +65,7 @@ class AuthenticateApiKey
     protected function getKeyFromRequest($request)
     {
         $mode = config('keyable.mode', 'bearer');
+        
         switch ($mode) {
             case 'bearer':
                 return $request->bearerToken();

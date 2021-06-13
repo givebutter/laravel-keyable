@@ -12,11 +12,25 @@ class ApiKey extends Model
 
     protected $table = 'api_keys';
 
-    protected $fillable = ['key', 'keyable_id', 'keyable_type', 'last_used_at'];
+    protected $fillable = [
+        'key', 
+        'keyable_id', 
+        'keyable_type', 
+        'last_used_at',
+    ];
 
     protected $casts = [
         'last_used_at' => 'datetime',
     ];
+    
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($apiKey) {
+            $apiKey->key = self::generate();
+        });
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -64,8 +78,8 @@ class ApiKey extends Model
     public static function keyExists($key)
     {
         return self::where('key', $key)
-      ->withTrashed()
-      ->first() instanceof self;
+            ->withTrashed()
+            ->first() instanceof self;
     }
 
     /**
@@ -73,6 +87,8 @@ class ApiKey extends Model
      */
     public function markAsUsed()
     {
-        $this->forceFill(['last_used_at' => $this->freshTimestamp()])->save();
+        return $this->forceFill([
+            'last_used_at' => $this->freshTimestamp()
+        ])->save();
     }
 }

@@ -13,8 +13,6 @@ trait Keyable
 
     public function createApiKey()
     {
-        return $this->apiKeys()->save(new ApiKey([
-            'key' => ApiKey::generate(),
-        ]));
+        return $this->apiKeys()->create([]);
     }
 }

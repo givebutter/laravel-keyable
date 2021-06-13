@@ -134,7 +134,7 @@ https://example.com/api/posts?api_key=<key>
 
 Laravel offers a great way to perform [Authorization](https://laravel.com/docs/5.8/authorization) on incoming requests using Policies. However, they are limited to authenticated users. We replicate that functionality to let you authorize requests on any incoming model.
 
-To begin, add the `AuthorizesKeyableRequests` trait to your base `Controller.php class`:
+To begin, add the `AuthorizesKeyableRequests` trait to your base `Controller.php` class:
 
 ```php
 <?php

@@ -12,8 +12,7 @@ class DeleteApiKey extends Command
      *
      * @var string
      */
-    protected $signature = 'api-key:delete
-                            {--id= : ID of the API key you want to delete.}';
+    protected $signature = 'api-key:delete {--id= : ID of the API key you want to delete.}';
 
     /**
      * The console command description.
@@ -38,7 +37,9 @@ class DeleteApiKey extends Command
     public function handle()
     {
         $key = ApiKey::findOrFail($this->option('id'));
+        
         $key->delete();
+        
         $this->info('API key successfully deleted.');
     }
 }

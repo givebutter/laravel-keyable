@@ -11,20 +11,21 @@ use Illuminate\Support\ServiceProvider;
 class KeyableServiceProvider extends ServiceProvider
 {
     /**
-     * Bootstrap services.
+     * Bootstrap any package services.
      *
      * @return void
      */
     public function boot(Router $router)
     {
-        $this->publishFiles();
+        $this->publishes([
+            __DIR__ . '/../config/keyable.php' => config_path('keyable.php'),
+        ]);
+        
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+        
         $this->registerMiddleware($router);
-        if ($this->app->runningInConsole()) {
-            $this->commands([
-                GenerateApiKey::class,
-                DeleteApiKey::class,
-            ]);
-        }
+        
+        $this->registerCommands();
     }
 
     /**
@@ -36,20 +37,17 @@ class KeyableServiceProvider extends ServiceProvider
     {
         //
     }
-
-    /**
-     * Publish files.
-     *
-     * @return void
-     */
-    private function publishFiles()
+    
+    protected function registerCommands()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->publishes([
-            __DIR__ . '/../config/keyable.php' => config_path('keyable.php'),
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                GenerateApiKey::class,
+                DeleteApiKey::class,
+            ]);
+        }
     }
-
+    
     /**
      * Register middleware.
      *
