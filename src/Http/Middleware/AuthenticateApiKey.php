@@ -23,7 +23,7 @@ class AuthenticateApiKey
         $token = $this->getKeyFromRequest($request);
 
         //Check for presence of key
-        if (!$token) {
+        if (! $token) {
             return $this->unauthorizedResponse();
         }
 
@@ -31,7 +31,7 @@ class AuthenticateApiKey
         $apiKey = ApiKey::getByKey($token);
 
         //Validate key
-        if (!($apiKey instanceof ApiKey)) {
+        if (! ($apiKey instanceof ApiKey)) {
             return $this->unauthorizedResponse();
         }
 
@@ -40,11 +40,11 @@ class AuthenticateApiKey
 
         //Validate model
         if (config('keyable.allow_empty_models', false)) {
-            if (!$keyable && (!is_null($apiKey->keyable_type) || !is_null($apiKey->keyable_id))) {
+            if (! $keyable && (! is_null($apiKey->keyable_type) || ! is_null($apiKey->keyable_id))) {
                 return $this->unauthorizedResponse();
             }
         } else {
-            if (!$keyable) {
+            if (! $keyable) {
                 return $this->unauthorizedResponse();
             }
         }

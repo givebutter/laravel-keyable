@@ -49,6 +49,6 @@ class GenerateApiKey extends Command
 
         $apiKey->save();
 
-        $this->info('The following API key was created: '.$apiKey->key);
+        $this->info('The following API key was created: ' . $apiKey->key);
     }
 }

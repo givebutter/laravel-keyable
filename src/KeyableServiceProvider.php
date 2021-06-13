@@ -44,9 +44,9 @@ class KeyableServiceProvider extends ServiceProvider
      */
     private function publishFiles()
     {
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->publishes([
-            __DIR__.'/../config/keyable.php' => config_path('keyable.php'),
+            __DIR__ . '/../config/keyable.php' => config_path('keyable.php'),
         ]);
     }
 
