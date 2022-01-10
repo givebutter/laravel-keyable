@@ -15,35 +15,31 @@ class EnforceKeyableScope extends TestCase
     /** @test */
     public function request_with_parameter_must_be_owned_by_keyable()
     {
-        $account = Account::create();
-        $account->createApiKey();
-
-        $post = $account->posts()->create();
-
         Route::get("/api/posts/{post}", function (Request $request, Post $post) {
             return response('All good', 200);
         })->middleware(['api', 'auth.apikey'])->keyableScoped();
 
+        $account = Account::create();
+        $post = $account->posts()->create();
+
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->apiKeys()->first()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
         ])->get("/api/posts/{$post->id}")->assertOk();
     }
 
     /** @test */
     public function request_with_model_not_owned_by_keyable_throws_model_not_found()
     {
-        $account = Account::create();
-        $account->createApiKey();
-
-        $account2 = Account::create();
-        $post = $account2->posts()->create();
-
         Route::get("/api/posts/{post}", function (Request $request, Post $post) {
             return response('All good', 200);
         })->middleware([ 'api', 'auth.apikey'])->keyableScoped();
 
+        $account = Account::create();
+        $account2 = Account::create();
+        $post = $account2->posts()->create();
+
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->apiKeys()->first()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
         ])->get("/api/posts/{$post->id}")->assertNotFound();
     }
 
@@ -109,7 +105,6 @@ class EnforceKeyableScope extends TestCase
         | FAILING
         | --------------------------------
         */
-
         $account2 = Account::create();
         $post2 = $account2->posts()->create();
         $comment2 = $post2->comments()->create();
