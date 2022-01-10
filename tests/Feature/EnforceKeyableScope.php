@@ -6,10 +6,9 @@ use Illuminate\Http\Request;
 use Givebutter\Tests\TestCase;
 use Givebutter\Tests\Support\Post;
 use Givebutter\Tests\Support\Account;
-use Givebutter\Tests\Support\PostsController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Givebutter\Tests\Support\PostsController;
+use Givebutter\Tests\Support\CommentsController;
 
 class EnforceKeyableScope extends TestCase
 {
@@ -43,62 +42,80 @@ class EnforceKeyableScope extends TestCase
             return response('All good', 200);
         })->middleware([ 'api', 'auth.apikey'])->keyableScoped();
 
-        try {
-            $this->withHeaders([
-                'Authorization' => 'Bearer ' . $account->apiKeys()->first()->key,
-            ])->get("/api/posts/{$post->id}");
-        } catch (ModelNotFoundException $e) {
-            $this->assertTrue(true);
-            return;
-        }
-
-        // force a fail since it shouldn't reach this point.
-        $this->assertTrue(false);
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $account->apiKeys()->first()->key,
+        ])->get("/api/posts/{$post->id}")->assertNotFound();
     }
 
     /** @test */
     public function works_with_resource_routes()
     {
-        // PASSING
-        $account = Account::create();
-        $account->createApiKey();
-
-        $post = $account->posts()->create();
-
         Route::prefix('api')->middleware(['api', 'auth.apikey'])->group(function () {
             Route::apiResource('posts', PostsController::class)
                 ->only('show')
                 ->keyableScoped();
         });
 
+        /*
+        | --------------------------------
+        | PASSING
+        | --------------------------------
+        */
+        $account = Account::create();
+        $post = $account->posts()->create();
+
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->apiKeys()->first()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
         ])->get("/api/posts/{$post->id}")->assertOk();
 
-
-        // FAILING
-        $account = Account::create();
-        $account->createApiKey();
-
+        /*
+        | --------------------------------
+        | FAILING
+        | --------------------------------
+        */
         $account2 = Account::create();
         $post = $account2->posts()->create();
 
-        Route::prefix('api')->middleware(['api', 'auth.apikey'])->group(function () {
-            Route::apiResource('posts', PostsController::class)
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+        ])->get("/api/posts/{$post->id}")->assertNotFound();
+    }
+
+    /** @test */
+    public function can_use_scoped_with_keyableScoped()
+    {
+        Route::middleware(['api', 'auth.apikey'])->group(function () {
+            Route::apiResource('posts.comments', CommentsController::class)
                 ->only('show')
+                ->scoped()
                 ->keyableScoped();
         });
 
-        try {
-            $this->withHeaders([
-                'Authorization' => 'Bearer ' . $account->apiKeys()->first()->key,
-            ])->get("/api/posts/{$post->id}");
-        } catch (ModelNotFoundException $e) {
-            $this->assertTrue(true);
-            return;
-        }
+        /*
+        | --------------------------------
+        | PASSING
+        | --------------------------------
+        */
+        $account = Account::create();
+        $post = $account->posts()->create();
+        $comment = $post->comments()->create();
 
-        // force a fail since it shouldn't reach this point.
-        $this->assertTrue(false);
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+        ])->get("posts/{$post->id}/comments/{$comment->id}")->assertOk();
+
+        /*
+        | --------------------------------
+        | FAILING
+        | --------------------------------
+        */
+
+        $account2 = Account::create();
+        $post2 = $account2->posts()->create();
+        $comment2 = $post2->comments()->create();
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+        ])->get("posts/{$post->id}/comments/{$comment2->id}")->assertNotFound();
     }
 }

@@ -23,7 +23,6 @@ class TestCase extends OrchestraTestCase
         });
 
         $this->setUpDatabase($this->app);
-        $this->withoutExceptionHandling();
     }
 
     protected function getPackageProviders($app)
@@ -63,8 +62,8 @@ class TestCase extends OrchestraTestCase
 
     protected function prepareDatabaseForHasCustomFieldsModel()
     {
-        include_once __DIR__ . '/../tests/Support/Migrations/create_accounts_and_posts_tables.php';
-        (new \CreateAccountsAndPostsTables())->up();
+        include_once __DIR__ . '/../tests/Support/Migrations/create_test_tables.php';
+        (new \CreateTestTables())->up();
     }
 
     protected function resetDatabase()
