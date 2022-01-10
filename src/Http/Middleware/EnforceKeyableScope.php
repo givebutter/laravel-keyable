@@ -27,20 +27,10 @@ class EnforceKeyableScope
             return $next($request);
         }
 
-
         $parameterName = $route->parameterNames()[0];
-        $parameter = $route->parameters()[$parameterName];
-
-        if (! is_object($parameter)) {
-            $parameter = Arr::first($route->signatureParameters(UrlRoutable::class));
-            $instance = app(Reflector::getParameterClassName($parameter));
-
-            $routeBindingMethod = $route->allowsTrashedBindings()
-                        ? 'resolveSoftDeletableRouteBinding'
-                        : 'resolveRouteBinding';
-
-            $instance->{$routeBindingMethod}($parameter, $route->bindingFieldFor($parameterName));
-        }
+        $parameterValue = $route->originalParameters()[$parameterName];
+        $parameter = Arr::first($route->signatureParameters(UrlRoutable::class));
+        $instance = app(Reflector::getParameterClassName($parameter));
 
         $childRouteBindingMethod = $route->allowsTrashedBindings()
                 ? 'resolveSoftDeletableChildRouteBinding'
@@ -48,10 +38,10 @@ class EnforceKeyableScope
 
         if (! $request->keyable->{$childRouteBindingMethod}(
             $parameterName,
-            $parameter->id,
+            $parameterValue,
             $route->bindingFieldFor($parameterName)
         )) {
-            throw (new ModelNotFoundException)->setModel(get_class($parameter), [$parameter->id]);
+            throw (new ModelNotFoundException)->setModel(get_class($instance), [$parameterValue]);
         }
 
         return $next($request);
