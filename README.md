@@ -64,7 +64,7 @@ use App\Http\Controllers\Controller;
 
 class FooController extends Controller {
 
-    public function index(Request $request) 
+    public function index(Request $request)
     {
         $model = $request->keyable;
 
@@ -84,11 +84,11 @@ Sometimes you may not want to attach a model to an API key (if you wanted to hav
 
 ```php
 <?php
-	
+
 return [
-	
+
     'allow_empty_models' => true
-	
+
 ];
 ```
 
@@ -100,29 +100,29 @@ By default, laravel-keyable uses bearer tokens to authenticate requests. Attach 
 Authorization: Bearer <key>
 ```
 
-You can change where the API key is retrieved from by altering the setting in the `keyable.php` config file. Supported options are: `bearer`, `header`, and `parameter`. 
+You can change where the API key is retrieved from by altering the setting in the `keyable.php` config file. Supported options are: `bearer`, `header`, and `parameter`.
 ```php
 <?php
-	
+
 return [
-	
+
     'mode' => 'header',
-	
+
     'key' => 'X-Authorization',
-	
+
 ];
 ```
 
 Need to pass the key as a URL parameter? Set the mode to `parameter` and the key to the string you'll use in your URL:
 ```php
 <?php
-	
+
 return [
-	
+
     'mode' => 'parameter',
-	
+
     'key' => 'api_key'
-	
+
 ];
 ```
 Now you can make requests like this:
@@ -167,7 +167,7 @@ class PostPolicy {
     public function view(ApiKey $apiKey, Model $keyable, Post $post) {
     	return !is_null($keyable->posts()->find($post->id));
     }
-    
+
 }
 ```
 
@@ -186,9 +186,9 @@ use Givebutter\LaravelKeyable\Facades\Keyable;
 
 class AuthServiceProvider extends ServiceProvider
 {
-	
+
     // ...
-    
+
     protected $keyablePolicies = [
         Post::class => PostPolicy::class
     ];
@@ -198,7 +198,7 @@ class AuthServiceProvider extends ServiceProvider
         // ...
         Keyable::registerKeyablePolicies($this->keyablePolicies);
     }
-    
+
 }
 ```
 
@@ -221,6 +221,41 @@ class PostController extends Controller {
     }
 
 }
+```
+
+## Keyable Model Scoping
+
+When using implicit model binding, you may wish to scope the first model such that it must be a child of the keyable model. Consider an example where we have a post resource:
+
+```php
+use App\Models\Post;
+
+Route::get('/posts/{post}', function (Post $post) {
+    return $post;
+});
+```
+
+You may instruct the package to apply the scope by invoking the `keyableScoped` method when defining your route:
+
+```php
+use App\Models\Post;
+
+Route::get('/posts/{post}', function (Post $post) {
+    return $post;
+})->keyableScoped();
+```
+
+The benefits of applying this scope are two-fold. First, models not belonging to the keyable model are caught before the controller. That means you don't have to handle this repeatedly in the controller methods. Second, models that don't belong to the keyable model will trigger a 404 response instead of a 403, keeping information hidden about other users.
+
+You may use this in tandem with Laravel's scoping to ensure the entire heirarchy has a parent-child relationship starting with the keyable model:
+
+```php
+use App\Models\Post;
+use App\Models\User;
+
+Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
+    return $post;
+})->scopeBindings()->keyableScoped();
 ```
 
 ## Artisan Commands
