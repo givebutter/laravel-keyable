@@ -11,8 +11,10 @@ trait Keyable
         return $this->morphMany(ApiKey::class, 'keyable');
     }
 
-    public function createApiKey()
+    public function createApiKey(?string $name = null)
     {
-        return $this->apiKeys()->create([]);
+        return $this->apiKeys()->create([
+            'name' => $name,
+        ]);
     }
 }

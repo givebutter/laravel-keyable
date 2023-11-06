@@ -16,6 +16,7 @@ class ApiKey extends Model
         'key', 
         'keyable_id', 
         'keyable_type', 
+        'name', 
         'last_used_at',
     ];
 
