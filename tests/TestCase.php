@@ -58,6 +58,9 @@ class TestCase extends OrchestraTestCase
     {
         include_once __DIR__ . '/../database/migrations/2019_04_09_225232_create_api_keys_table.php';
         (new \CreateApiKeysTable())->up();
+
+        include_once __DIR__ . '/../database/migrations/2023_11_06_095032_increase_key_column_length_add_nullable_name_column_to_api_keys_table.php';
+        (new \IncreaseKeyColumnLengthAddNullableNameColumnToApiKeysTable())->up();
     }
 
     protected function prepareDatabaseForHasCustomFieldsModel()

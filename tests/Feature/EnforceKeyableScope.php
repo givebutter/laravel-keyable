@@ -23,7 +23,7 @@ class EnforceKeyableScope extends TestCase
         $post = $account->posts()->create();
 
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("/api/posts/{$post->id}")->assertOk();
     }
 
@@ -39,7 +39,7 @@ class EnforceKeyableScope extends TestCase
         $post = $account2->posts()->create();
 
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("/api/posts/{$post->id}")->assertNotFound();
     }
 
@@ -61,7 +61,7 @@ class EnforceKeyableScope extends TestCase
         $post = $account->posts()->create();
 
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("/api/posts/{$post->id}")->assertOk();
 
         /*
@@ -73,7 +73,7 @@ class EnforceKeyableScope extends TestCase
         $post = $account2->posts()->create();
 
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("/api/posts/{$post->id}")->assertNotFound();
     }
 
@@ -97,7 +97,7 @@ class EnforceKeyableScope extends TestCase
         $comment = $post->comments()->create();
 
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("posts/{$post->id}/comments/{$comment->id}")->assertOk();
 
         /*
@@ -110,7 +110,7 @@ class EnforceKeyableScope extends TestCase
         $comment2 = $post2->comments()->create();
 
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $account->createApiKey()->key,
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("posts/{$post->id}/comments/{$comment2->id}")->assertNotFound();
     }
 }
