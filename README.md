@@ -263,7 +263,7 @@ Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
 Generate an API key:
 
 ```bash
-php artisan api-key:generate --id=1 --type="App\Models\Account"
+php artisan api-key:generate --id=1 --type="App\Models\Account" --name="My api key"
 ```
 
 Delete an API key:
