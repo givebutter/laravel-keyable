@@ -3,7 +3,7 @@
 namespace Givebutter\LaravelKeyable;
 
 use Givebutter\LaravelKeyable\Models\ApiKey;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Model;
 
 trait Keyable
 {
@@ -16,10 +16,12 @@ trait Keyable
     {
         $planTextApiKey = ApiKey::generate();
 
-        $apiKey = $this->apiKeys()->create([
-            'key' => hash('sha256', $planTextApiKey),
-            'name' => $attributes['name'] ?? null,
-        ]);
+        $apiKey = Model::withoutEvents(function () use ($planTextApiKey, $attributes) {
+            return $this->apiKeys()->create([
+                'key' => hash('sha256', $planTextApiKey),
+                'name' => $attributes['name'] ?? null,
+            ]);
+        });
 
         return new NewApiKey($apiKey, "{$apiKey->getKey()}|{$planTextApiKey}");
     }
