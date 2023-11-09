@@ -37,10 +37,10 @@ class HashApiKeys extends Command
                         'key' => hash('sha256', $apiKey->key),
                     ]);
 
-                    $this->info("Api key of ID {$apiKey->getKey()} successfully hashed.");
+                    $this->info("API key of ID {$apiKey->getKey()} successfully hashed.");
                 }, 250);
 
-            $this->info('All api keys successfully hashed.');
+            $this->info('All API keys were successfully hashed.');
         });
     }
 }
