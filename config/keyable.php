@@ -28,4 +28,25 @@ return [
 
     'allow_empty_models' => false,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Non hashed API keys mode
+    |--------------------------------------------------------------------------
+    |
+    | Set this to true to instruct the package to accept non hashed API keys.
+    | 
+    | This is useful, for example, if your api_keys table has a very large
+    | number of records, in such case hashing all existing API keys can take
+    | a while.
+    |
+    | Once the new database changes are in place and all existing keys were
+    | hashed, you can simply update an environment variable and have the
+    | package correctly handle hashed API keys.
+    |
+    | Ex: 'non_hashed_api_keys_mode' => env('NON_HASHED_API_KEYS_MODE')
+    |
+    */
+
+    'non_hashed_api_keys_mode' => false,
+
 ];
