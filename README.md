@@ -69,7 +69,7 @@ $newApiKey->plainTextApiKey // This is the key you should use to authenticate re
 $newApiKey->apiKey // The instance of ApiKey just created
 ```
 
-You can also manually create API keys without using the `createApiKey` from the `Keyable` trait, in that case, the isntance you get back will have a property called `plainTextApikey` populated with the plain text API key.
+You can also manually create API keys without using the `createApiKey` from the `Keyable` trait, in that case, the instance you get back will have a property called `plainTextApikey` populated with the plain text API key.
 
 ```php
 $myApiKey = ApiKey::create([
