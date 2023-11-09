@@ -60,28 +60,28 @@ The middleware will authenticate API requests, ensuring they contain an API key 
 
 You can generate new API keys by calling the `createApiKey()` method from the `Keyable` trait.
 
-When you do so, it will return an instance of `NewApiKey`, which is a simple class the contains the actual `ApiKey` instance that was just created, and also contains the plain text api key, which is the one you should use to authenticate requests.
+When you do so, it returns an instance of `NewApiKey`, which is a simple class the contains the actual `ApiKey` instance that was just created, and also contains the plain text api key, which is the one you should use to authenticate requests.
 
 ```php
 $newApiKey = $keyable->createApiKey();
 
-$newApiKey->plainTextApiKey // This is the key you should use to authenticate request for example
+$newApiKey->plainTextApiKey // This is the key you should use to authenticate requests
 $newApiKey->apiKey // The instance of ApiKey just created
 ```
 
-You can also manually create API keys without using the `createApiKey` from the `Keyable` trait, in that case make sure to specify your own plain text token, an example code is shown below.
+You can also manually create API keys without using the `createApiKey` from the `Keyable` trait, in that case, the intance you get back will have a property called `plainTextApikey` populated with the plain text api key.
 
 ```php
-$planTextApiKey = ApiKey::generate();
-
-ApiKey::create([
-    'key' => $planTextApiKey,
+$myApiKey = ApiKey::create([
     'keyable_id' => $account->getKey(),
     'keyable_type' => Account::class,
+    'name' => 'My api key',
 ]);
+
+$myApiKey->plainTextApikey // Token to be used to authenticate requests
 ```
 
-The value on `$planTextApiKey` will be automatically hashed by the package before being saved to the database, and you will have the plain token to authenticate requests or display it to the user.
+Keep in mind `plainTextApikey` will only be populated immediately after creating the key.
 
 ### Accessing keyable models in your controllers
 The model associated with the key will be attached to the incoming request as ```keyable```:
