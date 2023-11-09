@@ -3,12 +3,12 @@
 namespace Givebutter\Tests\Feature;
 
 use Givebutter\LaravelKeyable\Models\ApiKey;
-use Illuminate\Http\Request;
-use Givebutter\Tests\TestCase;
-use Givebutter\Tests\Support\Post;
 use Givebutter\Tests\Support\Account;
+use Givebutter\Tests\Support\Post;
+use Givebutter\Tests\TestCase;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 class NonHashedApiKeysMode extends TestCase
@@ -23,15 +23,15 @@ class NonHashedApiKeysMode extends TestCase
         $account = Account::create();
         $post = $account->posts()->create();
 
-        $plainTextApiKey = ApiKey::generate();
-
         // Store the api key as non hashed
-        DB::table('api_keys')
-            ->insert([
+        $plainTextApiKey = ApiKey::generate();
+        Model::withoutEvents(function () use ($plainTextApiKey, $account) {
+            return ApiKey::create([
                 'keyable_id' => $account->getKey(),
                 'keyable_type' => Account::class,
                 'key' => $plainTextApiKey,
             ]);
+        });
 
         $this->assertDatabaseCount('api_keys', 1);
         $this->assertDatabaseHas('api_keys', [
