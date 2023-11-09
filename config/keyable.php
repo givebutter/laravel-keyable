@@ -40,13 +40,11 @@ return [
     | a while.
     |
     | Once the new database changes are in place and all existing keys were
-    | hashed, you can simply update an environment variable and have the
+    | hashed, you can simply update the environment variable and have the
     | package correctly handle hashed API keys.
-    |
-    | Ex: 'non_hashed_api_keys_mode' => env('NON_HASHED_API_KEYS_MODE')
     |
     */
 
-    'non_hashed_api_keys_mode' => false,
+    'non_hashed_api_keys_mode' => env('NON_HASHED_API_KEYS_MODE', false),
 
 ];
