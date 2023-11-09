@@ -56,6 +56,31 @@ protected function mapApiRoutes()
 
 The middleware will authenticate API requests, ensuring they contain an API key that is valid.
 
+### Generating API keys
+
+You can generate new API keys by calling the `createApiKey()` method from the `Keyable` trait, when you do so, it will return an instance of `NewApiKey`, which is a simple class the contains the actual `ApiKey` instance that was just created, and also contains the plain text api key, which is the one you should use to authenticate requests.
+
+```php
+$newApiKey = $keyable->createApiKey();
+
+$newApiKey->plainTextApiKey // This is the key you should use to authenticate request for example
+$newApiKey->apiKey // The instance of ApiKey just created
+```
+
+If you choose to manually create API keys without using the `createApiKey` from the `Keyable` trait, make sure to specify your own plain text token, an example code is shown below.
+
+```php
+$planTextApiKey = ApiKey::generate();
+
+ApiKey::create([
+    'key' => $planTextApiKey,
+    'keyable_id' => $account->getKey(),
+    'keyable_type' => Account::class,
+]);
+```
+
+The value on `$planTextApiKey` will be automatically hashed by the package before being saved to the database, and you will have the plain token to authenticate requests or display it to the user.
+
 ### Accessing keyable models in your controllers
 The model associated with the key will be attached to the incoming request as ```keyable```:
 
