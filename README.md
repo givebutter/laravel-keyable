@@ -58,7 +58,9 @@ The middleware will authenticate API requests, ensuring they contain an API key 
 
 ### Generating API keys
 
-You can generate new API keys by calling the `createApiKey()` method from the `Keyable` trait, when you do so, it will return an instance of `NewApiKey`, which is a simple class the contains the actual `ApiKey` instance that was just created, and also contains the plain text api key, which is the one you should use to authenticate requests.
+You can generate new API keys by calling the `createApiKey()` method from the `Keyable` trait.
+
+When you do so, it will return an instance of `NewApiKey`, which is a simple class the contains the actual `ApiKey` instance that was just created, and also contains the plain text api key, which is the one you should use to authenticate requests.
 
 ```php
 $newApiKey = $keyable->createApiKey();
@@ -67,7 +69,7 @@ $newApiKey->plainTextApiKey // This is the key you should use to authenticate re
 $newApiKey->apiKey // The instance of ApiKey just created
 ```
 
-If you choose to manually create API keys without using the `createApiKey` from the `Keyable` trait, make sure to specify your own plain text token, an example code is shown below.
+You can also manually create API keys without using the `createApiKey` from the `Keyable` trait, in that case make sure to specify your own plain text token, an example code is shown below.
 
 ```php
 $planTextApiKey = ApiKey::generate();
@@ -295,6 +297,46 @@ Delete an API key:
 ```bash
 php artisan api-key:delete --id=12345
 ```
+
+## Upgrade guide
+
+### Upgrading from 2.1.1 to 3.0
+
+ATTENTION: It is highly recommended that you generate a backup of you database before going thought the steps below, just to be safe in case something goes wrong.
+
+#### Step 1: Update your `composer.json` file
+
+Update the version of this package in your composer.json file to `3.0`.
+
+```json
+"require": {
+    // ...
+    "givebutter/laravel-keyable": "^3.0",
+    // ...
+},
+```
+
+#### Step 2. Run composer update
+
+```bash
+composer update
+```
+
+#### Step 3. Run the migrations
+
+```
+php artisan migrate
+```
+
+#### Step 4. Hash existing api keys
+
+A command was added to hash existing api keys that are not currently hashed, it will ensure existing API keys will keep working properly after upgrading.
+
+```
+php artisan api-key:hash
+```
+
+This command should be executed only once.
 
 ## Security
 
