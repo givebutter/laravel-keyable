@@ -39,15 +39,12 @@ class GenerateApiKey extends Command
      */
     public function handle()
     {
-        $planTextApiKey = ApiKey::generate();
-
         $apiKey = (new ApiKey)->create([
             'keyable_id' => $this->option('id'),
             'keyable_type' => $this->option('type'),
             'name' => $this->option('name'),
-            'key' => $planTextApiKey,
         ]);
 
-        $this->info('The following API key was created: ' . "{$apiKey->getKey()}|{$planTextApiKey}");
+        $this->info('The following API key was created: ' . "{$apiKey->getKey()}|{$apiKey->plainTextApiKey}");
     }
 }

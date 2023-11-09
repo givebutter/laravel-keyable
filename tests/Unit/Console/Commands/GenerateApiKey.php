@@ -23,7 +23,7 @@ class GenerateApiKey extends TestCase
                 '--type' => Account::class,
                 '--name' => 'my api key',
             ]);
-        
+
         // Assert
         $output = Artisan::output();
         $generatedKey = explode('|', $output, 2)[1];

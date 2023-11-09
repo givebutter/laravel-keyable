@@ -11,13 +11,15 @@ class ApiKey extends Model
 {
     use SoftDeletes;
 
+    public ?string $plainTextApiKey = null;
+
     protected $table = 'api_keys';
 
     protected $fillable = [
-        'key', 
-        'keyable_id', 
-        'keyable_type', 
-        'name', 
+        'key',
+        'keyable_id',
+        'keyable_type',
+        'name',
         'last_used_at',
     ];
 
@@ -30,7 +32,10 @@ class ApiKey extends Model
         parent::boot();
 
         static::creating(function (ApiKey $apiKey) {
-            $apiKey->key = hash('sha256', $apiKey->key ?? self::generate());
+            if (is_null($apiKey->key)) {
+                $apiKey->plainTextApiKey = self::generate();
+                $apiKey->key = hash('sha256', $apiKey->plainTextApiKey);
+            }
         });
     }
 
