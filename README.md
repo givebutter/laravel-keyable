@@ -302,7 +302,7 @@ php artisan api-key:delete --id=12345
 
 ### Upgrading from 2.1.1 to 3.0
 
-ATTENTION: It is highly recommended that you generate a backup of you database before going thought the steps below, just to be safe in case something goes wrong.
+ATTENTION: It is highly recommended that you generate a backup of your database before going throught the steps below, just to be safe in case something goes wrong.
 
 #### Step 1: Update your `composer.json` file
 
