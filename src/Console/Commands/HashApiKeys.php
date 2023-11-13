@@ -14,7 +14,7 @@ class HashApiKeys extends Command
      *
      * @var string
      */
-    protected $signature = 'api-key:hash {--id=}';
+    protected $signature = 'api-key:hash {--id= : ID of the API key you want to hash}';
 
     /**
      * The console command description.
