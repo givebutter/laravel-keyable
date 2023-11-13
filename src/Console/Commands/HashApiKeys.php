@@ -4,6 +4,7 @@ namespace Givebutter\LaravelKeyable\Console\Commands;
 
 use Givebutter\LaravelKeyable\Models\ApiKey;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class HashApiKeys extends Command
@@ -13,7 +14,7 @@ class HashApiKeys extends Command
      *
      * @var string
      */
-    protected $signature = 'api-key:hash';
+    protected $signature = 'api-key:hash {--id=}';
 
     /**
      * The console command description.
@@ -30,8 +31,13 @@ class HashApiKeys extends Command
     public function handle()
     {
         DB::transaction(function () {
+            $id = $this->option('id');
+
             ApiKey::query()
                 ->withTrashed()
+                ->when($id, function (Builder $query) use ($id) {
+                    $query->where('id', $id);
+                })
                 ->eachById(function (ApiKey $apiKey) {
                     $apiKey->update([
                         'key' => hash('sha256', $apiKey->key),
