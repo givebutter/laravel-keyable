@@ -16,7 +16,8 @@ class CreateApiKeysTable extends Migration
         Schema::create('api_keys', function (Blueprint $table) {
             $table->increments('id');
             $table->nullableMorphs('keyable');
-            $table->string('key', 40);
+            $table->string('name')->nullable();
+            $table->string('key', 255);
             $table->dateTime('last_used_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
