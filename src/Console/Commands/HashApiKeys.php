@@ -31,11 +31,9 @@ class HashApiKeys extends Command
     public function handle()
     {
         DB::transaction(function () {
-            $id = $this->option('id');
-
             ApiKey::query()
                 ->withTrashed()
-                ->when($id, function (Builder $query) use ($id) {
+                ->when($this->option('id'), function (Builder $query, int $id) {
                     $query->where('id', $id);
                 })
                 ->eachById(function (ApiKey $apiKey) {
