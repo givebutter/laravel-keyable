@@ -105,7 +105,9 @@ class HashApiKeys extends TestCase
         ]);
 
         // Act
-        $this->artisan("api-key:hash --id={$apiKeyNotHashed1->id}");
+        $this->artisan('api-key:hash', [
+            '--id' => $apiKeyNotHashed1->id,
+        ]);
 
         // Assert
         $this->assertDatabaseCount('api_keys', 2);

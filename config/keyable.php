@@ -30,21 +30,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Non hashed API keys mode
+    | Compatibility mode
     |--------------------------------------------------------------------------
     |
-    | Set this to true to instruct the package to accept non hashed API keys.
-    | 
-    | This is useful, for example, if your api_keys table has a very large
-    | number of records, in such case hashing all existing API keys can take
-    | a while.
+    | Set this to true to instruct this package to accept both hashed and non
+    | hashed API keys.
     |
-    | Once the new database changes are in place and all existing keys were
-    | hashed, you can simply update the environment variable and have the
-    | package correctly handle hashed API keys.
+    | This is useful to keep your app running smoothly while you are going
+    | throught the upgrade step for version 2.1.1 to 3.0.
+    |
+    | Once the new database changes are in place and all existing keys are
+    | hashed, you should set this flag to false to instruct this package to
+    | only look for hashed API keys.
     |
     */
 
-    'non_hashed_api_keys_mode' => env('NON_HASHED_API_KEYS_MODE', false),
+    'compatibility_mode' => env('COMPATIBILITY_MODE', true),
 
 ];

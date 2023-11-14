@@ -101,10 +101,13 @@ class ApiKey extends Model
 
     public function scopeOfKey(Builder $query, string $key): Builder
     {
-        $nonHashedApiKeysMode = config('keyable.non_hashed_api_keys_mode', false);
+        $compatibilityMode = config('keyable.compatibility_mode', false);
 
-        if ($nonHashedApiKeysMode) {
-            return $query->where('key', $key);
+        if ($compatibilityMode) {
+            return $query->where(function (Builder $query) use ($key) {
+                return $query->where('key', $key)
+                    ->orWhere('key', hash('sha256', $key));
+            });
         }
 
         if (strpos($key, '|') === false) {
