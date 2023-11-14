@@ -29,4 +29,8 @@ This command should be executed only once.
 
 #### Step 4. Set `keyable.compatibility_mode` to false
 
-Update your environment variable that points to `keyable.compatibility_mode` to `false`, this will instruct this package to only handle hashed API keys.
+A new configuration flag was introduced in the `keyable.php` config file on version `3.0.0`, it is called `compatibility_mode`, make sure to publish this package's config file to be able to access it.
+
+By default it points to an environment variable called `COMPATIBILITY_MODE`, but you can update it to whatever you need of course.
+
+Update your environment variable (that points to the new flag mentioned above) to `false`, this will instruct this package to only handle hashed API keys.
