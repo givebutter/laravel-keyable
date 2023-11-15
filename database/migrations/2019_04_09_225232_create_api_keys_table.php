@@ -17,7 +17,7 @@ class CreateApiKeysTable extends Migration
             $table->increments('id');
             $table->nullableMorphs('keyable');
             $table->string('name')->nullable();
-            $table->string('key', 255);
+            $table->string('key', 64);
             $table->dateTime('last_used_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

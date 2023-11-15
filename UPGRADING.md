@@ -9,7 +9,7 @@ ATTENTION: It is highly recommended that you generate a backup of your database 
 Implement the following changes on your `api_keys` table.
 
 - Add a new nullable string column called `name`.
-- Modify the existing `key` column to increase its length from 40 to 255.
+- Modify the existing `key` column to increase its length from 40 to 64.
 
 #### Step 2: Update the package to version 3.0.0
 
