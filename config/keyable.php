@@ -45,6 +45,6 @@ return [
     |
     */
 
-    'compatibility_mode' => env('COMPATIBILITY_MODE', true),
+    'compatibility_mode' => env('KEYABLE_COMPATIBILITY_MODE', false),
 
 ];
