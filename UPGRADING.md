@@ -11,26 +11,42 @@ Implement the following changes on your `api_keys` table.
 - Add a new nullable string column called `name`.
 - Modify the existing `key` column to increase its length from 40 to 255.
 
-#### Step 2: Update this package to version 3.0.0
+#### Step 2: Update the package to version 3.0.0
 
 ```bash
 composer require givebutter/laravel-keyable:3.0.0
 ```
 
-#### Step 3. Hash existing API keys
+#### Step 3. Turn on `compatibility_mode`
+
+A new configuration flag was introduced in the `keyable.php` config file on version `3.0.0`, it is called `compatibility_mode`, make sure to publish the package's config file to be able to access it.
+
+By default it is set to `false`, but when it is set to `true` the package will handle both hashed and non hashed API keys, which should keep your application running smoothly while you complete all migration steps.
+
+It is specially useful if you have a very large `api_keys` table, which could take a while to hash all existing API keys.
+
+It points to an environment variable called `KEYABLE_COMPATIBILITY_MODE`, but you can update it to whatever you need of course.
+
+Make sure to update `KEYABLE_COMPATIBILITY_MODE` to `true` if you want to make use of that feature.
+
+#### Step 4. Hash existing API keys
 
 A command was added to hash existing API keys that are not currently hashed, it will ensure existing API keys will continue working properly once you finish all upgrade steps.
 
-```
+```bash
 php artisan api-key:hash
 ```
 
-This command should be executed only once.
+It is also possible to hash a single API key at a time, by passing an `--id` option.
 
-#### Step 4. Set `keyable.compatibility_mode` to false
+```bash
+php artisan api-key:hash --id=API_KEY_ID
+```
 
-A new configuration flag was introduced in the `keyable.php` config file on version `3.0.0`, it is called `compatibility_mode`, make sure to publish this package's config file to be able to access it.
+Be very careful with this option, as each API key should be hashed only once.
 
-By default it points to an environment variable called `COMPATIBILITY_MODE`, but you can update it to whatever you need of course.
+Ideally you should only use it for testing and on your own API keys.
 
-Update your environment variable (that points to the new flag mentioned above) to `false`, this will instruct this package to only handle hashed API keys.
+#### Step 5. Turn off compatibility mode
+
+If you are making use of the compatibility mode, it can now be turned off by setting `KEYABLE_COMPATIBILITY_MODE` to `false`, it is not needed anymore.
