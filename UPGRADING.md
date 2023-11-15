@@ -21,7 +21,7 @@ composer require givebutter/laravel-keyable:3.0.0
 
 A new configuration flag was introduced in the `keyable.php` config file on version `3.0.0`, it is called `compatibility_mode`, make sure to publish the package's config file to be able to access it.
 
-By default it is set to `false`, but when it is set to `true` the package will handle both hashed and non hashed API keys, which should keep your application running smoothly while you complete all migration steps.
+By default it is set to `false`, but when it is set to `true` the package will handle both hashed and non hashed API keys, which should keep your application running smoothly while you complete all upgrade steps.
 
 It is specially useful if you have a very large `api_keys` table, which could take a while to hash all existing API keys.
 
