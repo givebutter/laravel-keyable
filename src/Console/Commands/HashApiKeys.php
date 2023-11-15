@@ -36,7 +36,7 @@ class HashApiKeys extends Command
                 ->when($this->option('id'), function (Builder $query, int $id) {
                     $query->where('id', $id);
                 })
-                ->whereRaw('LENGTH(key) != 64')
+                ->whereRaw('LENGTH(api_keys.key) != 64')
                 ->eachById(function (ApiKey $apiKey) {
                     $apiKey->update([
                         'key' => hash('sha256', $apiKey->key),
