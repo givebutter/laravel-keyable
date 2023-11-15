@@ -47,6 +47,8 @@ Be very careful with this option, as each API key should be hashed only once.
 
 Ideally you should only use it for testing and on your own API keys.
 
+The command tries to avoid hashing an API key twice by comparing the length of the `key` column, if it is already 64 then the command understands the key is already hashed and won't do it again.
+
 #### Step 5. Turn off compatibility mode
 
 If you are making use of the compatibility mode, it can now be turned off by setting `KEYABLE_COMPATIBILITY_MODE` to `false`, it is not needed anymore.
