@@ -71,14 +71,24 @@ class CompatibilityMode extends TestCase
             'key' => $apiKey2->fresh()->key,
         ]);
 
-        // Assert the non hashed api keys works
+        // Assert that non hashed api keys works
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $plainTextApiKey1,
+            'Authorization' => "Bearer {$plainTextApiKey1}",
         ])->get("/api/posts/{$post->id}")->assertOk();
 
-        // Assert the hashed api keys works
+        // Assert that non hashed api keys with ID prefix works
         $this->withHeaders([
-            'Authorization' => 'Bearer ' . $plainTextApiKey2,
+            'Authorization' => "Bearer {$apiKey1->id}|{$plainTextApiKey1}",
+        ])->get("/api/posts/{$post->id}")->assertOk();
+
+        // Assert that hashed api keys works
+        $this->withHeaders([
+            'Authorization' => "Bearer {$plainTextApiKey2}",
+        ])->get("/api/posts/{$post->id}")->assertOk();
+
+        // Assert that hashed api keys with ID prefix works
+        $this->withHeaders([
+            'Authorization' => "Bearer {$apiKey2->id}|{$plainTextApiKey2}",
         ])->get("/api/posts/{$post->id}")->assertOk();
     }
 }

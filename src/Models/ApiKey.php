@@ -105,17 +105,32 @@ class ApiKey extends Model
 
         if ($compatibilityMode) {
             return $query->where(function (Builder $query) use ($key) {
-                return $query->where('key', $key)
-                    ->orWhere('key', hash('sha256', $key));
+                if (! str_contains($key, '|')) {
+                    return $query->where('key', $key)
+                        ->orWhere('key', hash('sha256', $key));
+                }
+
+                [$id, $key] = explode('|', $key, 2);
+
+                return $query
+                    ->where(function (Builder $query) use ($key, $id) {
+                        return $query->where('key', $key)
+                            ->where('id', $id);
+                    })
+                    ->orWhere(function (Builder $query) use ($key, $id) {
+                        return $query->where('key', hash('sha256', $key))
+                            ->where('id', $id);
+                    });
             });
         }
 
-        if (strpos($key, '|') === false) {
+        if (! str_contains($key, '|')) {
             return $query->where('key', hash('sha256', $key));
         }
 
         [$id, $key] = explode('|', $key, 2);
 
-        return $query->where('id', $id)->where('key', hash('sha256', $key));
+        return $query->where('id', $id)
+            ->where('key', hash('sha256', $key));
     }
 }
