@@ -105,17 +105,46 @@ class ApiKey extends Model
 
         if ($compatibilityMode) {
             return $query->where(function (Builder $query) use ($key) {
-                return $query->where('key', $key)
-                    ->orWhere('key', hash('sha256', $key));
+                if ($this->isMissingId($key)) {
+                    return $query->where('key', $key)
+                        ->orWhere('key', hash('sha256', $key));
+                }
+
+                $id = $this->extractId($key);
+                $key = $this->extractKey($key);
+
+                return $query
+                    ->where(function (Builder $query) use ($key, $id) {
+                        return $query->where('key', $key)
+                            ->where('id', $id);
+                    })
+                    ->orWhere(function (Builder $query) use ($key, $id) {
+                        return $query->where('key', hash('sha256', $key))
+                            ->where('id', $id);
+                    });
             });
         }
 
-        if (strpos($key, '|') === false) {
+        if ($this->isMissingId($key)) {
             return $query->where('key', hash('sha256', $key));
         }
 
-        [$id, $key] = explode('|', $key, 2);
+        return $query->where('id', $this->extractId($key))
+            ->where('key', hash('sha256', $this->extractKey($key)));
+    }
 
-        return $query->where('id', $id)->where('key', hash('sha256', $key));
+    private function isMissingId(string $key): bool
+    {
+        return strpos($key, '|') === false;
+    }
+
+    private function extractId(string $key): string
+    {
+        return explode('|', $key, 2)[0];
+    }
+
+    private function extractKey(string $key): string
+    {
+        return explode('|', $key, 2)[1];
     }
 }
