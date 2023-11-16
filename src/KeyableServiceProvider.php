@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\PendingResourceRegistration;
 use Givebutter\LaravelKeyable\Console\Commands\DeleteApiKey;
 use Givebutter\LaravelKeyable\Console\Commands\GenerateApiKey;
+use Givebutter\LaravelKeyable\Console\Commands\HashApiKeys;
 use Givebutter\LaravelKeyable\Http\Middleware\AuthenticateApiKey;
 use Givebutter\LaravelKeyable\Http\Middleware\EnforceKeyableScope;
 
@@ -49,6 +50,7 @@ class KeyableServiceProvider extends ServiceProvider
             $this->commands([
                 GenerateApiKey::class,
                 DeleteApiKey::class,
+                HashApiKeys::class,
             ]);
         }
     }

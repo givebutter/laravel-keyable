@@ -56,6 +56,33 @@ protected function mapApiRoutes()
 
 The middleware will authenticate API requests, ensuring they contain an API key that is valid.
 
+### Generating API keys
+
+You can generate new API keys by calling the `createApiKey()` method from the `Keyable` trait.
+
+When you do so, it returns an instance of `NewApiKey`, which is a simple class the contains the actual `ApiKey` instance that was just created, and also contains the plain text api key, which is the one you should use to authenticate requests.
+
+```php
+$newApiKey = $keyable->createApiKey();
+
+$newApiKey->plainTextApiKey // This is the key you should use to authenticate requests
+$newApiKey->apiKey // The instance of ApiKey just created
+```
+
+You can also manually create API keys without using the `createApiKey` from the `Keyable` trait, in that case, the instance you get back will have a property called `plainTextApikey` populated with the plain text API key.
+
+```php
+$myApiKey = ApiKey::create([
+    'keyable_id' => $account->getKey(),
+    'keyable_type' => Account::class,
+    'name' => 'My api key',
+]);
+
+$myApiKey->plainTextApikey // Token to be used to authenticate requests
+```
+
+Keep in mind `plainTextApikey` will only be populated immediately after creating the key.
+
 ### Accessing keyable models in your controllers
 The model associated with the key will be attached to the incoming request as ```keyable```:
 
@@ -263,13 +290,17 @@ Route::get('/users/{user}/posts/{post}', function (User $user, Post $post) {
 Generate an API key:
 
 ```bash
-php artisan api-key:generate --id=1 --type="App\Models\Account"
+php artisan api-key:generate --id=1 --type="App\Models\Account" --name="My api key"
 ```
 
 Delete an API key:
 ```bash
 php artisan api-key:delete --id=12345
 ```
+
+## Upgrading
+
+Please see [UPGRADING](UPGRADING.md) for details.
 
 ## Security
 

@@ -14,7 +14,8 @@ class GenerateApiKey extends Command
      */
     protected $signature = 'api-key:generate
                             {--id= : ID of the model you want to bind to this API key}
-                            {--type= : The class name of the model you want to bind to this API key}';
+                            {--type= : The class name of the model you want to bind to this API key}
+                            {--name= : The name you want to give to this API key}';
 
     /**
      * The console command description.
@@ -41,8 +42,9 @@ class GenerateApiKey extends Command
         $apiKey = (new ApiKey)->create([
             'keyable_id' => $this->option('id'),
             'keyable_type' => $this->option('type'),
+            'name' => $this->option('name'),
         ]);
 
-        $this->info('The following API key was created: ' . $apiKey->key);
+        $this->info('The following API key was created: ' . "{$apiKey->getKey()}|{$apiKey->plainTextApiKey}");
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Givebutter\LaravelKeyable\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
@@ -10,25 +11,31 @@ class ApiKey extends Model
 {
     use SoftDeletes;
 
+    public ?string $plainTextApiKey = null;
+
     protected $table = 'api_keys';
 
     protected $fillable = [
-        'key', 
-        'keyable_id', 
-        'keyable_type', 
+        'key',
+        'keyable_id',
+        'keyable_type',
+        'name',
         'last_used_at',
     ];
 
     protected $casts = [
         'last_used_at' => 'datetime',
     ];
-    
+
     public static function boot()
     {
         parent::boot();
 
-        static::creating(function ($apiKey) {
-            $apiKey->key = self::generate();
+        static::creating(function (ApiKey $apiKey) {
+            if (is_null($apiKey->key)) {
+                $apiKey->plainTextApiKey = self::generate();
+                $apiKey->key = hash('sha256', $apiKey->plainTextApiKey);
+            }
         });
     }
 
@@ -63,7 +70,7 @@ class ApiKey extends Model
      */
     public static function getByKey($key)
     {
-        return self::where('key', $key)->first();
+        return self::ofKey($key)->first();
     }
 
     /**
@@ -77,7 +84,7 @@ class ApiKey extends Model
      */
     public static function keyExists($key)
     {
-        return self::where('key', $key)
+        return self::ofKey($key)
             ->withTrashed()
             ->first() instanceof self;
     }
@@ -90,5 +97,25 @@ class ApiKey extends Model
         return $this->forceFill([
             'last_used_at' => $this->freshTimestamp()
         ])->save();
+    }
+
+    public function scopeOfKey(Builder $query, string $key): Builder
+    {
+        $compatibilityMode = config('keyable.compatibility_mode', false);
+
+        if ($compatibilityMode) {
+            return $query->where(function (Builder $query) use ($key) {
+                return $query->where('key', $key)
+                    ->orWhere('key', hash('sha256', $key));
+            });
+        }
+
+        if (strpos($key, '|') === false) {
+            return $query->where('key', hash('sha256', $key));
+        }
+
+        [$id, $key] = explode('|', $key, 2);
+
+        return $query->where('id', $id)->where('key', hash('sha256', $key));
     }
 }
