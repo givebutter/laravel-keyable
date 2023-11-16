@@ -105,13 +105,12 @@ class ApiKey extends Model
 
         if ($compatibilityMode) {
             return $query->where(function (Builder $query) use ($key) {
-                if ($this->isMissingId($key)) {
+                if (! str_contains($key, '|')) {
                     return $query->where('key', $key)
                         ->orWhere('key', hash('sha256', $key));
                 }
 
-                $id = $this->extractId($key);
-                $key = $this->extractKey($key);
+                [$id, $key] = explode('|', $key, 2);
 
                 return $query
                     ->where(function (Builder $query) use ($key, $id) {
@@ -125,26 +124,13 @@ class ApiKey extends Model
             });
         }
 
-        if ($this->isMissingId($key)) {
+        if (! str_contains($key, '|')) {
             return $query->where('key', hash('sha256', $key));
         }
 
-        return $query->where('id', $this->extractId($key))
-            ->where('key', hash('sha256', $this->extractKey($key)));
-    }
+        [$id, $key] = explode('|', $key, 2);
 
-    private function isMissingId(string $key): bool
-    {
-        return strpos($key, '|') === false;
-    }
-
-    private function extractId(string $key): string
-    {
-        return explode('|', $key, 2)[0];
-    }
-
-    private function extractKey(string $key): string
-    {
-        return explode('|', $key, 2)[1];
+        return $query->where('id', $id)
+            ->where('key', hash('sha256', $key));
     }
 }
