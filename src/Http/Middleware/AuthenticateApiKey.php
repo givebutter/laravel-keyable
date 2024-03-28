@@ -18,7 +18,6 @@ class AuthenticateApiKey
      */
     public function handle($request, Closure $next, $guard = null)
     {
-
         //Get API token from request
         $token = $this->getKeyFromRequest($request);
 
@@ -50,9 +49,9 @@ class AuthenticateApiKey
         }
 
         //Attach the apikey object to the request
-        $request->apiKey = $apiKey;
+        $request->merge(['apiKey' => $apiKey]);
         if ($keyable) {
-            $request->keyable = $keyable;
+            $request->merge(['keyable' => $keyable]);
         }
 
         //Update last_used_at
@@ -65,7 +64,7 @@ class AuthenticateApiKey
     protected function getKeyFromRequest($request)
     {
         $mode = config('keyable.mode', 'bearer');
-        
+
         switch ($mode) {
             case 'bearer':
                 return $request->bearerToken();
