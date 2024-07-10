@@ -17,6 +17,10 @@ return [
 
     'key' => null,
 
+    'key-header' => null,
+
+    'key-parameter' => null,
+
     /*
     |--------------------------------------------------------------------------
     | Empty Models

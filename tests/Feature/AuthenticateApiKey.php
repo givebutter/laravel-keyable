@@ -21,6 +21,17 @@ class AuthenticateApiKey extends TestCase
             'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
         ])->get("/api/posts")->assertOk();
     }
+    /** @test */
+    public function request_with_api_key_responds_ok_in_param_mode()
+    {
+        Route::get("/api/posts", function () {
+            return response('All good', 200);
+        })->middleware(['api', 'auth.apikey:parameter']);
+
+        $account = Account::create();
+
+        $this->get("/api/posts?api_key=" . $account->createApiKey()->plainTextApiKey)->assertOk();
+    }
 
     /** @test */
     public function request_with_valid_api_key_without_id_prefix_responds_ok()
@@ -80,5 +91,19 @@ class AuthenticateApiKey extends TestCase
         })->middleware(['api', 'auth.apikey']);
 
         $this->get("/api/posts")->assertUnauthorized();
+    }
+
+    /** @test */
+    public function request_without_api_key_properly_set_responds_unauthorized()
+    {
+        Route::get("/api/posts", function () {
+            return response('All good', 200);
+        })->middleware(['api', 'auth.apikey:parameter']);
+
+        $account = Account::create();
+
+        $this->withHeaders([
+            'Authorization' => 'Bearer ' . $account->createApiKey()->plainTextApiKey,
+        ])->get("/api/posts")->assertUnauthorized();
     }
 }
