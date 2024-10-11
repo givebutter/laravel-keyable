@@ -3,9 +3,7 @@
 namespace Givebutter\LaravelKeyable\Http\Middleware;
 
 use Closure;
-use Givebutter\LaravelKeyable\Exceptions\ForbidenRequestParamException;
 use Givebutter\LaravelKeyable\Models\ApiKey;
-use Illuminate\Http\Request;
 
 class AuthenticateApiKey
 {
@@ -20,7 +18,22 @@ class AuthenticateApiKey
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        $this->checkForbidenRequestParams($request);
+        $forbidenRequestParams = ['apiKey', 'keyable'];
+        
+        // Check if request has forbidden params
+        foreach ($forbidenRequestParams as $param) {
+            if ($request->missing($param)) {
+                continue;
+            }
+
+            $message = "Request param '{$param}' is not allowed.";
+
+            if ($request->wantsJson()) {
+                return response()->json(['message' => $message], 400);
+            }
+
+            return response($message, 400);
+        }
 
         //Get API token from request
         $token = $this->getKeyFromRequest($request);
@@ -89,18 +102,5 @@ class AuthenticateApiKey
                 'message' => 'Unauthorized',
             ],
         ], 401);
-    }
-
-    private function checkForbidenRequestParams(Request $request): void
-    {
-        $forbidenParams = ['apiKey', 'keyable'];
-
-        foreach ($forbidenParams as $forbidenParam) {
-            if ($request->missing($forbidenParam)) {
-                continue;
-            }
-
-            throw new ForbidenRequestParamException("Request param '{$forbidenParam}' is not allowed.");
-        }
     }
 }
