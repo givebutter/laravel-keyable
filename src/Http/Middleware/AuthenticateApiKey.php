@@ -18,6 +18,23 @@ class AuthenticateApiKey
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        $forbidenRequestParams = ['apiKey', 'keyable'];
+        
+        // Check if request has forbidden params
+        foreach ($forbidenRequestParams as $param) {
+            if ($request->missing($param)) {
+                continue;
+            }
+
+            $message = "Request param '{$param}' is not allowed.";
+
+            if ($request->wantsJson()) {
+                return response()->json(['message' => $message], 400);
+            }
+
+            return response($message, 400);
+        }
+
         //Get API token from request
         $token = $this->getKeyFromRequest($request);
 
