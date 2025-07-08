@@ -13,11 +13,12 @@ class AuthenticateApiKey
      *
      * @param \Illuminate\Http\Request $request
      * @param Closure                  $next
+     * @param string|null              $mode
      * @param string|null              $guard
      *
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next, ?string $mode = null, $guard = null)
     {
         $forbidenRequestParams = ['apiKey', 'keyable'];
 
@@ -37,7 +38,7 @@ class AuthenticateApiKey
         }
 
         //Get API token from request
-        $token = $this->getKeyFromRequest($request);
+        $token = $this->getKeyFromRequest($request, $mode);
 
         //Check for presence of key
         if (! $token) {
@@ -81,19 +82,19 @@ class AuthenticateApiKey
         return $next($request);
     }
 
-    protected function getKeyFromRequest($request)
+    protected function getKeyFromRequest($request, $mode)
     {
-        $mode = config('keyable.mode', 'bearer');
+        $mode = $mode ?? config('keyable.mode', 'bearer');
 
         switch ($mode) {
             case 'bearer':
                 return $request->bearerToken();
                 break;
             case 'header':
-                return $request->header(config('keyable.key', 'X-Authorization'));
+                return $request->header(config('keyable.key-' . $mode, config('keyable.key', 'X-Authorization')));
                 break;
             case 'parameter':
-                return $request->input(config('keyable.key', 'api_key'));
+                return $request->input(config('keyable.key-' . $mode, config('keyable.key', 'api_key')));
                 break;
         }
     }
