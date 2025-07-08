@@ -4,6 +4,7 @@ namespace Givebutter\LaravelKeyable\Http\Middleware;
 
 use Closure;
 use Givebutter\LaravelKeyable\Models\ApiKey;
+use Givebutter\LaravelKeyable\Events\KeyableAuthenticated;
 
 class AuthenticateApiKey
 {
@@ -19,7 +20,7 @@ class AuthenticateApiKey
     public function handle($request, Closure $next, $guard = null)
     {
         $forbidenRequestParams = ['apiKey', 'keyable'];
-        
+
         // Check if request has forbidden params
         foreach ($forbidenRequestParams as $param) {
             if ($request->missing($param)) {
@@ -73,6 +74,8 @@ class AuthenticateApiKey
 
         //Update last_used_at
         $apiKey->markAsUsed();
+
+        event(new KeyableAuthenticated($apiKey));
 
         //Return
         return $next($request);
